@@ -5,6 +5,7 @@ import json
 import os
 
 # Initialize the speech engine only once
+# himanshu Start
 engine = pyttsx3.init()
 
 def say(text):
