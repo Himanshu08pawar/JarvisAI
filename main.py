@@ -125,3 +125,22 @@ if __name__ == '__main__':
         else:
             response = handle_general_queries(query)
             say(response)
+# Load messages once at the start
+messages = load_messages()
+
+def save_message(name, message, delivery_date, delivery_time):
+    global messages  # Use the global messages list
+    messages.append({"name": name, "message": message, "delivery_date": delivery_date, "delivery_time": delivery_time})
+    with open("legacy_messages.json", "w") as f:
+        json.dump(messages, f)
+
+def check_messages():
+    global messages  # Use the global messages list
+    now = datetime.now()
+    for msg in messages[:]:  # Iterate over a shallow copy
+        message_datetime = datetime.strptime(f"{msg['delivery_date']} {msg['delivery_time']}", "%Y-%m-%d %H:%M")
+        if message_datetime <= now:
+            say(f"Message for {msg['name']}: {msg['message']}")
+            messages.remove(msg)
+    with open("legacy_messages.json", "w") as f:
+        json.dump(messages, f)
